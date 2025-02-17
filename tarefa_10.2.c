@@ -54,7 +54,7 @@ void gpio_irq_handler(uint gpio, uint32_t events) {
             tam_quadrado_atual++;
           }
           else{
-            tam_quadrado_atual=tam_quadrado_min;
+            tam_quadrado_atual=tam_quadrado_min; // Aumenta o tamanho do quadrado até um limite estabelecido
           }
         }
     }

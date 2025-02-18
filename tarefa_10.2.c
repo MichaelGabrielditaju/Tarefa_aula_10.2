@@ -54,7 +54,7 @@ void gpio_irq_handler(uint gpio, uint32_t events) {
             tam_quadrado_atual++;
           }
           else{
-            tam_quadrado_atual=tam_quadrado_min; // Aumenta o tamanho do quadrado até um limite estabelecido
+            tam_quadrado_atual=tam_quadrado_min;
           }
         }
     }
@@ -138,6 +138,10 @@ int main() {
         adc_select_input(0); // Eixo Y
         adc_value_y = adc_read();    
 
+        // Exibir valores no display
+        sprintf(str_x, "X: %d", adc_value_x);
+        sprintf(str_y, "Y: %d", adc_value_y);
+
         // Verifica se os valores estão em uma posição neutra
         if (adc_value_x >= NEUTRO_MIN && adc_value_x <= NEUTRO_MAX &&
             adc_value_y >= NEUTRO_MIN && adc_value_y <= NEUTRO_MAX) {
@@ -148,12 +152,12 @@ int main() {
             // Controla a intensidade dos LEDs RGB
             if (pwm_ativos) {
                 // LED Vermelho aumenta à medida que o joystick se afasta do neutro no eixo X
-                uint16_t led_vermelho_brightness = (adc_value_x >= NEUTRO_MAX) ?
+                uint16_t led_vermelho_brightness = (adc_value_x > NEUTRO_MAX) ?
                     (adc_value_x * PWM_MAX) / 10000 : 
                     (NEUTRO_MIN - adc_value_x) * PWM_MAX / (NEUTRO_MIN - 0);
 
                 // LED Azul aumenta à medida que o joystick se afasta do neutro no eixo Y
-                uint16_t led_azul_brightness = (adc_value_y >= NEUTRO_MAX) ?
+                uint16_t led_azul_brightness = (adc_value_y > NEUTRO_MAX) ?
                     (adc_value_y * PWM_MAX) / 10000 :
                     (NEUTRO_MIN - adc_value_y) * PWM_MAX / (NEUTRO_MIN - 0);
 
@@ -167,14 +171,17 @@ int main() {
 
         // Atualiza a posição do quadrado
         square_x = (adc_value_x * (WIDTH - 8)) / 4095; // Mapeia para a largura do display
-        square_y = (adc_value_y * (HEIGHT - 8)) / 4095; // Mapeia para a altura do display
+        square_y = HEIGHT - 8 - (adc_value_y * (HEIGHT - 8)) / 4095; // Inverte o eixo Y
 
         // Atualiza o display
         ssd1306_fill(&ssd, false); // Limpa o display
         ssd1306_rect(&ssd, 3, 3, 122, 60, borda_estado, false); // Desenha a borda
         ssd1306_rect(&ssd, square_y, square_x, tam_quadrado_atual, tam_quadrado_atual, true, false); // Desenha o quadrado
+        
+        // Exibe os valores dos eixos
+        //ssd1306_draw_string(&ssd, str_x, 8, 10); // Exibe o valor do eixo X
+        //ssd1306_draw_string(&ssd, str_y, 8, 20); // Exibe o valor do eixo Y
         ssd1306_send_data(&ssd); // Atualiza o display
-
         sleep_ms(100); // Atraso para controle da taxa de atualização
     }
 }

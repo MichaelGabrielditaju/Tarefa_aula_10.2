@@ -4,7 +4,7 @@ Descrição do Projeto
 
 Este projeto tem como objetivo consolidar os conceitos sobre o uso de conversores analógico-digitais (ADC) no RP2040, utilizando a placa de desenvolvimento BitDogLab. O sistema utiliza um joystick para controlar a intensidade de LEDs RGB e mover um quadrado no display SSD1306, além de interagir com botões para alterar estados do sistema.
 
-Adicional: Optei por adicionar também a funcionalidade de quando apertar o botão B, o quadrado aumentar de tamanho até um limite pré estabelecido.
+Adicional: Optei por adicionar também a funcionalidade de quando apertar o botão B, o quadrado aumentar de tamanho até um limite pré estabelecido, após isso ele volta ao tamanho inicial.
 
 Objetivos
 
